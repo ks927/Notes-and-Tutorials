@@ -1,0 +1,199 @@
+<html>
+<style>
+body {
+    height: 2000px;
+    background: beige;
+  }
+  .dot {
+    height: 8px; width: 8px;
+    border-radius: 4px; /* rounds corners */
+    background: blue;
+    position: absolute;
+  }    
+    
+.progress {
+    border: 1px solid blue;
+    width: 100px;
+    position: fixed;
+    top: 10px; right: 10px;
+  }
+  .progress > div {
+    height: 12px;
+    background: blue;
+    width: 0%;
+  }
+</style>
+<p>click this handler</p>
+<button>click me</button>
+<button>click once button</button>
+    
+<h1>click me right or left</h1>
+    
+<p class='outer'>paragraph with a <button class='inner'>button inside</button></p>    
+
+<ul>
+    <li>A</li>
+    <li>B</li>
+    <li>C</li>
+</ul>    
+
+<a href="google.com">google</a>
+    
+<p>this page turns violet when you hold the V key.</p>
+    
+<div class="progress"><div></div></div>
+    
+    
+<p>Name: <input type="text" data-help="Your full name"></p>
+<p>Age: <input type="text" data-help="Age in years"></p>
+<p id="help"></p>
+
+<textarea>Type something here...</textarea>  
+
+<input id="turkish" type="text">
+
+<script>
+var paragraph = document.querySelector("p")
+paragraph.addEventListener("click", function(){
+    alert("You clicked!");
+})
+
+var button = document.querySelector("button")
+    button.addEventListener("click", function(){
+    console.log("button clicked");                             
+});
+
+var button2 = document.querySelector("button");
+    function once(){
+        console.log("clicked");//only shows up once
+        button2.removeEventListener("click", once);
+    }
+    button2.addEventListener("click", once);
+
+//the which property
+var h1 = document.querySelector('h1');
+h1.addEventListener("mousedown", function(){
+    if(event.which == 1){
+        console.log("left click");
+    } else if(event.which == 3){
+        console.log("right click");
+    }
+});  
+    
+var outer = document.querySelector('.outer');
+var inner = document.querySelector('.inner');
+outer.addEventListener("mousedown", function(){
+    console.log("handler for outer paragraph");
+});
+inner.addEventListener("mousedown", function(){
+    if(event.which == 3){
+        event.stopPropagation();//right click on button does nothing
+    }
+});
+    
+//the target property
+document.addEventListener("click", function(){
+    if(event.target.nodeName === "LI"){ //element has to be all caps
+        console.log("clicked!", event.target.textContent);
+    }
+});    
+
+//preventDefault 
+var link = document.querySelector('a');
+link.addEventListener("click", function(){
+    alert('nope');
+    event.preventDefault();
+});
+    
+//Key Events
+addEventListener("keydown",function(event){
+    if(event.keyCode == 86){
+        document.body.style.backgroundColor = "violet";
+    }
+});
+addEventListener("keyup",function(event){
+    if(event.keyCode == 86){
+                document.body.style.backgroundColor = "";
+    }
+});
+
+addEventListener("keypress", function(event) {
+    console.log(String.fromCharCode(event.charCode));
+  });//keypress plus String.fromCharCode(event.charCode) will give you what key was pressed
+
+    
+//Mouse Clicks
+addEventListener("click", function(){
+    var dot = document.createElement('div');
+    dot.className = 'dot';
+    dot.style.left = (event.pageX - 4) + 'px';
+    dot.style.top = (event.pageY - 4) + 'px';
+    document.body.appendChild(dot);
+});
+    
+//Mouse Motion
+
+    
+//Scroll Events
+var bar = document.querySelector('.progress div');
+addEventListener('scroll', function(){ 
+    var max = document.body.scrollHeight - innerHeight; 
+    var percent = (pageYOffset / max) * 100;//
+    bar.style.width = percent + '%';
+});
+//1.create var for .progress > div
+//2.add a listener for scroll
+//3.var max = subtract global variable innerHeight (total height of the window) from total scrollabe height
+//4.var percent = pageYOffest is the current scroll position / max * 100 gives us the percentage of the progress bar
+
+//Focus/Blur Events
+var help = document.querySelector("#help");
+var fields = document.querySelectorAll("input");
+for(var i=0; i < fields.length; i++){
+    fields[i].addEventListener("focus", function(event){
+        var text = event.target.getAttribute("data-help");
+        help.textContent = text;
+    });
+    fields[i].addEventListener("blur", function(event){
+        help.textContent = "";
+    });
+}
+    
+//Load Events
+    
+//Script Execution Timeline
+
+//Setting Timers
+setTimeout(function(){
+    document.body.style.backgroundColor = "yellow";
+}, 2000);//sets the bg color to yellow after 2 seconds
+
+//clearTimeout
+var bombTimer = setTimeout(function(){
+            alert("BOOM!");
+}, 500);
+if(Math.random() < 0.5){ //50% chance
+console.log("defused.");
+clearTimeout(bombTimer);
+}
+
+var textarea = document.querySelector("textarea");
+var timeout;
+textarea.addEventListener("keydown", function(){
+    clearTimeout(timeout);//clears the timeout
+    timeout = setTimeout(function(){
+        console.log("you stopped typing.");
+    }, 500);//each time they stop typing, it says this^
+});
+    
+    
+var field = document.querySelector("#turkish");
+field.addEventListener("keydown", function(event){
+    if(event.keyCode == 81 || event.keyCode == 87 || event.keyCode == 88){
+        event.preventDefault();
+    }
+});
+
+
+</script>
+</html>

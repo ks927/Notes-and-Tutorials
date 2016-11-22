@@ -1,0 +1,115 @@
+<script>
+//Using a function as a Namespace
+var names = ["Sunday", "Monday", "Tuesday", "Wednesday",
+             "Thursday", "Friday", "Saturday"];
+function dayName(number) {
+  return names[number];
+}
+
+document.write(dayName(1));//Monday
+//var names is not part of the modules interface, so it is spilling
+//into the global scope
+var dayName = function() {
+  var names = ["Sunday", "Monday", "Tuesday", "Wednesday",
+               "Thursday", "Friday", "Saturday"];
+  return function(number) {
+    return names[number];
+  };
+}();//the () means this function is immediately called
+
+document.write(dayName(3));//Wednesday
+//now var names is a local variable in an unnamed function, whos return
+//value is stored in the dayName variable.
+    
+(function() {
+  function square(x) { return x * x; }
+  var hundred = 100;
+
+  console.log(square(hundred));
+})();//10000
+//This is a way to isolate code from the outside environment entirely
+//the parentheses is a trick to declare the function without naming it.
+    
+var weekDay = function() {
+  var names = ["Sunday", "Monday", "Tuesday", "Wednesday",
+               "Thursday", "Friday", "Saturday"];
+  return {
+    name: function(number) { return names[number]; },
+    number: function(name) { return names.indexOf(name); }
+  };
+}();
+
+console.log(weekDay.name(weekDay.number("Sunday")));//Sunday
+console.log(weekDay.name(3));//Wednesday
+console.log(weekDay.number("Thursday"));//4
+//In order to add another functionality to our module, we must wrap 
+//the two functions in an object
+
+(function(exports) {
+  var names = ["Sunday", "Monday", "Tuesday", "Wednesday",
+               "Thursday", "Friday", "Saturday"];
+
+  exports.name = function(number) {
+    return names[number];
+  };
+  exports.number = function(name) {
+    return names.indexOf(name);
+  };
+})(this.weekDay = {});
+
+console.log(weekDay.name(weekDay.number("Saturday")));//Saturday
+//Private namespace
+    
+//Detaching from the Global Scope
+//Our goal here is a require function that, given a module name, will
+//load that module's file and return the appropriate interface value.
+    
+//Evaluating Data as Code
+//1.eval operator
+function evalAndReturnX(code){
+    eval(code);
+    return x;
+}
+console.log(evalAndReturnX("var x = 2"));//2
+    
+//A better way = the Function constructor
+var timesTwo = new Function("n", "return n * 2;");//list of argument names, and function body
+console.log(timesTwo(3));//6
+    
+//Require..We are assuming readFile is a working JS function
+function require(name){
+    var code = new Function("exports", readFile(name));//constructor
+    var exports = {};//exports object
+    code(exports);
+    return exports;
+}
+document.write(require("weekDay").name(1));//Monday
+    
+    
+function require(name){
+    if(name in require.cache)
+        return require.cache[name];
+    
+    var code = new Function("exports, module", readFile(name));
+    var exports = {}, module = {exports: exports};
+    code(exports, module);
+    
+    require.cache[name] = module.exports;
+    return module.exports;
+}
+require.cache = Object.create(null);
+//This is a module system (Called CommonJS modules) with a single //global variable, require, that allows modules to find and use each //other without going through the global scope
+
+var month = function(){
+    var names = ["January", "February", "March", "April"];
+    return {
+    name: function(number){ return names[number]; },
+    number: function(name){ return names.indexOf(name); }
+};
+}();
+console.log(month.name(2));
+    
+
+
+
+</script>

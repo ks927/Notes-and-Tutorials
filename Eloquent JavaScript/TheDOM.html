@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>My home page</title>
+  </head>
+  <body>
+    <h1>My home page</h1>
+    <p id = "para1" style="color: purple">Hello, I am Marijn and this is my home page.</p>
+    <p>I also wrote a book! Read it
+      <a href="http://eloquentjavascript.net">here</a>.</p>
+    <p>My first id attr:</p>
+<img id="ostrich" src="img/ostrich.png">
+      
+      
+      <p>The <img src="img/cat.png" alt="Cat"> in the
+  <img src="img/hat.png" alt="Hat">.</p>
+
+<p><button onclick="replaceImages()">Replace</button></p>
+
+<p style="border: 3px solid red">I'm boxed in</p>
+      
+This text is displayed <strong>inline</strong>,
+<strong style="display: block">as a block</strong>, and
+<strong style="display: none">not at all</strong>.
+      
+<p style="text-align: center">
+  <img src="img/cat.png" style="position: relative">
+</p>
+
+  </body>
+<script>
+//to retrive the link
+var link = document.body.getElementsByTagName('a')[0];
+console.log(link.href);//http://eloquentjavascript.net/
+    
+var ostrich = document.getElementById('ostrich');
+console.log(ostrich.src);//img/ostrich.png
+    
+
+/*var paragraphs = document.getElementsByTagName('p');
+document.insertBefore(paragraphs[2], paragraphs[1]);//switches order of elements */
+
+//function to replace images on webpage with their alt attribute
+function replaceImages(){
+    var images = document.getElementsByTagName('img');
+    for(var i = images.length - 1; i >= 0; i--){
+        var image = images[i];
+        if(image.alt){
+            var text = document.createTextNode(image.alt);
+            image.parentNode.replaceChild(text, image);
+        }
+    }
+};
+//create a variable images for each img tag
+//loop needs to start at the end and decrement (i--) because the images are changing as we go
+//create an image variable for each images[i] that we loop.
+//create a text node variable if the image has an alt attribute
+//replace the text for the image on the parentNode
+    
+var paris = document.getElementsByTagName("p")[5];
+console.log("clientHeight:", paris.clientHeight);//18 and clientWidth give you size of space inside the element in pixels
+console.log("offsetHeight:", paris.offsetHeight);//24 and offsetHeight give you space the element takes up in pixels
+
+var para1 = document.getElementById("para1");
+console.log(para1.style.color);
+para1.style.color = "magenta";
+    
+//Query Selectors, querySelectorAll method
+function count(selector){
+    return document.querySelectorAll(selector).length;
+}
+console.log(count("p"));//6
+console.log(count("h1"));//1
+    
+var button = document.querySelector("button");
+console.log(button);
+    
+//Positioning and Animating
+
+
+
+
+
+
+
+
+
+</script>
+    
+</html>
