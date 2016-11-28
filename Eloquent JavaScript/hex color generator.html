@@ -16,10 +16,10 @@ function setBackground(){
     
 document.body.onkeyup = function(event){
     if(event.keyCode == 32){
-        setBackground();
+        setBackground()
     }
-    console.log(getColor());
-
+    document.body.innerHTML = getColor();
+ 
 };
     
 </script>
