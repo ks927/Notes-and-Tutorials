@@ -1,0 +1,89 @@
+<html>
+<form method="GET" action="example/message.html">
+<p>Name: <input type="text" name="name"</p>
+<p>Message: <br><textarea name="message"></textarea></p>
+<p><button type="submit">Send</button></p>
+    </form>
+<script>
+    
+var req = new XMLHttpRequest();
+    req.open("GET", "example/data.txt", false);//opens the request
+    req.send(null);//sends the request
+    console.log(req.responseText);
+//Cannot GET /example/data.txt
+    console.log(req.status, req.statusText);//404 "not found
+    console.log(req.getResponseHeader("content-type"));//text/plain
+
+//Asynchronous Request
+var req = new XMLHttpRequest();
+    req.open("GET", "example/data.txt", true);
+    req.addEventListener("load", function() {
+        console.log("Done:", req.status);
+    });
+    req.send(null);
+    
+//Here is a function to read the contents of a file
+function backgroundReadFile(url, callback){
+    var req = new XMLHttpRequest();
+    req.open("GET", url, true);
+    req.addEventListener("load", function(){
+        if(req.status < 400)
+            callback(req.responseText);
+    });
+    req.send(null);
+}
+//The problem with this is when it receives a status code with an error (400+), it does nothing, meaning the page will just sit there
+    
+//To handle failing requests we must add another function
+    
+function getURL(url, callback){
+    var req = new XMLHttpRequest();
+    req.open("GET", url, true);
+    req.addEventListener("load", function(){
+        if(req.status < 400)
+            callback(req.responseText);
+        else
+            callback(null, new Error("request failed: " + req.statusText));
+    });
+    req.addEventListener("error", function(){
+        callback(null, new Error("Network error"));
+    });
+    req.send(null);
+}
+    
+//Promises are an easier way than callback style to check for an error in asynchronous code
+function get(url) {
+  return new Promise(function(succeed, fail) {
+    var req = new XMLHttpRequest();
+    req.open("GET", url, true);
+    req.addEventListener("load", function() {
+      if (req.status < 400)
+        succeed(req.responseText);
+      else
+        fail(new Error("Request failed: " + req.statusText));
+    });
+    req.addEventListener("error", function() {
+      fail(new Error("Network error"));
+    });
+    req.send(null);
+  });
+}
+//this interface is a lot simpler. You give it a url and it returns a promise. 
+//that promise acts a handle to the requests outcome. it has a then method you call with 2 unctions
+get("example/data.txt").then(function(text){
+    console.log("data.txt: " + text);
+}, function(error){
+    console.log("Failed to fetch data.txt: " + error);
+});//Failed to fetch data.txt: Error: Request failed: Not Found
+    
+var req = new XMLHttpRequest();
+    req.open("GET", "eloquentjavascript.net/author", false);
+    console.log(req.setRequestHeader("content-type"));
+    req.send(null);
+
+    
+    
+    
+    
+</script>
+    </html>
