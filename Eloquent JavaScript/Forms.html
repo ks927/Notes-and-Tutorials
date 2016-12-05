@@ -1,0 +1,203 @@
+<input id="inputFile" type="file" autofocus>
+
+<select>
+<option>ipa</option>
+<option>stout</option>
+<option>pilsner</option>
+</select>
+
+
+<button>i'm all right</button>
+<button disabled>i'm out</button>
+
+<form action="example/submit.html">
+Name: <input type="text" name="name"><br>
+Pasword: <input type="password" name="password"><br>
+<button type="submit">Log in</button>
+</form>
+
+<textarea></textarea>
+
+<input type="checkbox" id="purple">
+<label for="purple">make this page purple</label> <!--the label tage associates a piece of text with an input field, its for attribute should refer to the id. Clicking the label will give it focus -->
+<br>
+<input type="radio" name="color" value="blue">Blue
+<br>
+<input type="radio" name="color" value="yellow"> Yellow
+<br>
+<input type="radio" name="color" value="green"> Green
+<br>
+<select id="multiple" multiple>
+<option>Nexium</option>
+<option>Topamax</option>
+<option>Magnesium</option>
+</select>
+
+
+
+
+<script>
+//Focus
+document.querySelector("input").focus();
+console.log(document.activeElement.tagName);//INPUT
+document.querySelector("input").blur();
+console.log(document.activeElement.tagName);//BODY
+//This is how you focus and blur specific elements in the DOM
+
+//autofocus gives element focus onload
+    
+//tabindex can be added to any alement making it focusable
+    
+//disabled fields
+
+//the <form> and its element property
+var form = document.querySelector("form")
+console.log(form.elements[1].type);//password
+console.log(form.elements.password.type);//password
+console.log(form.elements.name.form == form);//true
+//a button with a form element of submit will submit the form when pressed or if enter is pressed when the button has focus.
+    
+//When you submit a form via javascript, the browser navigates to the page indicated by the form's action attribute, using either GET or POST request.
+//BUT before that happens, a 'submit' event is fired which can be handled by javascript. 
+var form = document.querySelector("form")
+form.addEventListener("submit", function(event){
+    console.log("sending password", form.elements.password.password);
+    event.preventDefault();
+});
+    
+//selectionStart and selectionEnd in textareas
+//the following code inserts the string "Sacagawea" when I press up arrow
+var textarea = document.querySelector("textarea");
+textarea.addEventListener("keydown", function(event){
+    if(event.keyCode == 38){
+        replaceSelection(textarea, "Sacagawea");
+        event.preventDefault();//prevents up arrow from firing
+    }
+});
+//now write replaceSelection function with selectionStart and selectionEnd
+function replaceSelection(field, word){
+    var from = field.selectionStart, to = field.selectionEnd;
+    field.value = field.value.slice(0, from) + word + field.value.slice(to);
+    //put the cursor after the word
+    field.selectionStart = field.selectionEnd = from + word.length;
+};
+    
+//Checkboxes and Radio buttons are binary toggles with values that hold boolean values
+var checkbox = document.querySelector("#purple");
+checkbox.addEventListener("change", function(){
+    document.body.style.background = checkbox.checked ? "purple" : "";
+});//if it's checked, change background to purple
+    
+var buttons = document.getElementsByName("color")
+//getElementsByName selects all elements by that name
+function setColor(event){
+    document.body.style.background = event.target.value;
+}//set the background of the targeted element
+    
+for(var i=0; i < buttons.length; i++){
+    buttons[i].addEventListener("change", setColor);
+}//loops through buttons and adds setColor to each
+
+//Select fields have option tag, which have selected property
+var select = document.querySelector("#multiple");
+select.addEventListener("change", function(){
+    for(var i=0; i<select.options.length; i++){
+        var option = select.options[i];
+        if(option.selected){
+            console.log(option.value);
+        }
+    }
+});
+
+//File fields are inputs with type=file, files have name, type, and size properties
+    
+//Reading a file is a little trickier, and it is done by creating a FileReader object and registering a "load" object for it. 
+var inputFile = document.querySelector("#inputFile");
+inputFile.addEventListener("change", function(){
+ Array.prototype.forEach.call(inputFile.files, function(file){
+var reader = new FileReader();
+reader.addEventListener("load", function(){
+    console.log("File", file.name, "starts with", reader.result.slice(0, 20));
+});
+    reader.readAsText(file);
+});
+    });
+    
+    
+
+
+
+
+</script>
+
+Notes: <select id="list"></select>
+<button onclick="addNote()">new</button><br>
+<textarea id="currentnote" style="width: 100%; height: 10em"></textarea>
+<script>
+//Storing data client-side (or in the browser) via the localStorage object
+    
+//
+var list = document.querySelector("#list");
+function addToList(name){
+    var option = document.createElement("option");
+    option.textContent = name;
+    list.appendChild(option);
+}
+
+//Initialize the list from localStorage
+var notes = JSON.parse(localStorage.getItem("notes")) || {"shopping list": ""};
+    for(var name in notes)
+        if(notes.hasOwnProperty(name))
+            addToList(name);
+//save the list to localStorage
+function saveToStorage(){
+    localStorage.setItem("notes", JSON.stringify(notes));
+}
+//Get the value of the textarea in a var, set that var value equal to the JSON notes value, and finally save the new textarea and notes value to localStorage
+var current = document.querySelector("#currentnote");
+current.value = notes[list.value];
+
+list.addEventListener("change", function(){
+    current.value = notes[list.value];
+});
+current.addEventListener("change", function(){
+    notes[list.value] = current.value;
+    saveToStorage();
+});
+
+//Finally, create function for the new note button.
+function addNote(){
+    var name = prompt("Note name", "");
+    if(!name) return;
+    if(!notes.hasOwnProperty(name)){
+        notes[name] = "";
+        addToList(name);
+        saveToStorage();
+    }
+    list.value = name;
+    current.value = notes[name];
+}
+    
+    
+</script>
+
+<textarea id="code"></textarea>
+<button id="button" onclick="runString()">Run</button>
+<pre id="output"></pre>
+<script>
+//a textarea function that returns the value of the text box through a button click.
+function runString(){
+var code = document.querySelector("#code");
+var button = document.querySelector("#button");
+var output = document.querySelector("#output");
+    console.log(code.value)
+    output.innerHTML = code.value;
+};
+
+
+</script>
+
+
+
+
+
