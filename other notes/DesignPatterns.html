@@ -1,0 +1,45 @@
+<script>
+//Module Pattern
+var cartModule = (function () { 
+    //privates 
+    var cart = [];
+    
+    return {
+    //return object exposed to the public
+    addItem: function(items) {
+        cart.push(items);
+    },
+    countItem: function() {
+        return cart.length;
+    }
+        
+  };
+})();
+cartModule.addItem("bread");
+cartModule.addItem("soap");
+cartModule.addItem("beer");
+console.log(cartModule.countItem());//3
+console.log(cartModule.cart)//undefined because it's private
+
+
+//The Revealing Module Pattern
+var fellowship = (function() {
+    
+    var quest = "adventure";
+    
+    var members = function(mems){
+        return " " + mems + " are going on the " + quest;
+    }
+    
+    return {
+        
+        setMembers: members,
+        setQuest: quest
+        
+    };
+})();
+
+console.log(fellowship.setMembers("The fellowship"));//The fellowship are going on the adventure
+
+    
+</script>

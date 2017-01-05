@@ -124,6 +124,13 @@ var app = express();
 app.set('view engine', 'ejs');
 
 //using the GET http method
+app.get('/', function(request, response){
+    response.send('this is the homepage');
+});
+
+app.get('/contact', function(request, response){
+    response.send('this is the contact page');
+});
 
 app.get('/dec', function(request, response){
     response.sendFile(__dirname + '/node-december.html');
