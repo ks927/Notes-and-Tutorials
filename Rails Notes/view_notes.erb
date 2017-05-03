@@ -1,0 +1,14 @@
+
+<% code gets executed but <%= is actually displayed on the screen
+
+
+<% if user.signed_in? %>
+<ul>
+<% @users.each do |user| %>
+    <li> <%= @user.first_name %></li>
+    <% end %>
+</ul>
+<% else %>
+    <strong>You must sign in!</strong>
+<% end %>
+        
