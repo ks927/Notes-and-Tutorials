@@ -1,0 +1,57 @@
+<%= form_tag("/search", method: "get") do %>
+    <%= label_tag(:q, "Search for:) %>
+    <%= text_field_tag(:q) %>
+    <%= submit_tag("Search") %>
+<% end %>
+
+# Creates this form
+
+<form accept-charset="UTF-8" action="/search" method="get">
+    <label for="q">Search for:</label>
+    <input id="q" name="q" type="text" />
+    <input name="commit" type="submit" value="Search" />
+</form>
+            
+# /app/controllers/articles_controller.rb
+        
+def new
+   @article = Article.new
+end
+        
+<%= form_for @article do |f| %>
+    <%= f.text_field :title %>
+    <%= f.text_area :body, size: "60x12" %>
+    <%= f.submit "Create" %>
+<% end %>
+
+# This generates 
+
+<form accept-charset="UTF-8" action="/articles/create" method="post">
+      <input id="article_title" name="article[title]" type="text" />
+      <textarea id="article_body" name="article[body]" cols="60" rows="12"></textarea>
+      <input name="commit" type="submit" value="Create" />
+</form>
+    
+
+# Displaying Errors
+
+<% if @post.errors.any? %>
+    <div id="error_explanation">
+        <h2><%= pluralize(@post.errors.count, "error") %> prohibited this post from being saved: </h2>
+        
+        <ul>
+        <% @post.errors.full_messages.each do |msg| %>
+            <li><%= msg %></li>
+        <% end %>
+        </ul>
+    </div>
+<% end %>
+
+
+
+
+
+
+
+
+

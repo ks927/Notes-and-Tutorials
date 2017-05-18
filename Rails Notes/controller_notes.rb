@@ -12,7 +12,7 @@ class PostsController < ApplicationController
             flash[:success] = "Great! Your post has been created!"
             redirect_to @post #go to show page for @post
         else
-            flash[:error] = "Rats! Fixe your mistakes, please."
+            flash[:error] = "Rats! Fix your mistakes, please."
             render :new
         end
     end
